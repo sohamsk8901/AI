@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>Spelling and Grammar Correction</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1 style="text-align: center">Spelling and Grammar Correction</h1>
+    <form>
+      <label for="prompt">Enter your prompt:</label><br />
+      <input type="text" id="prompt" size="50" /><br />
+      <button type="button" onclick="getCompletion()">
+        Get Correct Sentence:
+      </button>
+    </form>
+    <br />
+    <h2>Correct Sentence:</h2>
+    <p id="output" style="text-align: center"></p>
+
+    <script>
+      function getCompletion() {
+        // Get the prompt from the text box
+        var prompt = document.getElementById("prompt").value;
+
+        // Make an HTTP request to the OpenAI API
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://api.openai.com/v1/completions", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader(
+          "Authorization",
+          "Bearer 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"
+        );
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            // Process the response from the OpenAI API
+            var response = JSON.parse(xhr.responseText);
+            var completion = response.choices[0].text;
+
+            // Display the completion
+            document.getElementById("output").innerHTML = completion;
+          }
+        };
+        xhr.send(
+          JSON.stringify({
+            model: "text-davinci-003",
+            prompt:
+              "correction in spelling , grammar and punctuation in this sentence :" +
+              prompt,
+            temperature: 0,
+            max_tokens: 60,
+            top_p: 1.0,
+            frequency_penalty: 0.0,
+            presence_penalty: 0.0,
+          })
+        );
+      }
+    </script>
+  </body>
+</html>
